@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  preference-api
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    Tracing: Active
+  Api:
+    TracingEnabled: True
+
+Resources:
+  CreatePreferenceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/create-preference/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE: PreferenceTable
+          REGION: ap-southeast-1
+      Events:
+        CreateAction:
+          Type: HttpApi
+          Properties:
+            Path: /preference
+            Method: post
+          Policies:
+            - DynamoDBCrudPolicy:
+              TableName: !Ref PreferenceTable
