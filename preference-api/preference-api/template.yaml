@@ -6,10 +6,29 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 60
     Tracing: Active
+    Runtime: python3.9
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        TABLE: !Ref Table
+        REGION: !Ref Region
+        AWSENV: !Ref AWSenv
   Api:
     TracingEnabled: True
+
+Parameters:
+  Table:
+    Type: String
+    Default: Preferences
+  Region:
+    Type: String
+    Default: ap-southeast-1
+  AWSenv:
+    Type: String
+    Default: AWS_SAM_LOCAL
 
 Resources:
   CreatePreferenceFunction:
@@ -17,19 +36,129 @@ Resources:
     Properties:
       CodeUri: src/create-preference/
       Handler: app.lambda_handler
-      Runtime: python3.9
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          TABLE: PreferenceTable
-          REGION: ap-southeast-1
+      Layers:
+        - !Ref MyLayers
       Events:
         CreateAction:
           Type: HttpApi
           Properties:
-            Path: /preference
+            Path: /preferences
             Method: post
+            ApiId: !Ref HttpApi
           Policies:
             - DynamoDBCrudPolicy:
               TableName: !Ref PreferenceTable
+
+  DeletePreferenceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/delete-preference/
+      Handler: app.lambda_handler
+      Layers:
+        - !Ref MyLayers
+      Events:
+        ListActions:
+          Type: HttpApi
+          Properties:
+            Path: /preferences/{user_id}
+            Method: delete
+            ApiId: !Ref HttpApi
+          Policies:
+            - DynamoDBCrudPolicy:
+              TableName: !Ref PreferenceTable
+
+  ReadPreferenceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/read-preference/
+      Handler: app.lambda_handler
+      Layers:
+        - !Ref MyLayers
+      Events:
+        GetActions:
+          Type: HttpApi
+          Properties:
+            Path: /preferences/{user_id}
+            Method: get
+            ApiId: !Ref HttpApi
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PreferenceTable
+
+  UpdateActionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/update-preference/
+      Handler: app.lambda_handler
+      Layers:
+        - !Ref MyLayers
+      Events:
+        ListActions:
+          Type: HttpApi
+          Properties:
+            Path: /preferences/{user_id}
+            Method: put
+            ApiId: !Ref HttpApi
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PreferenceTable
+
+  MyLayers:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: layers/
+      CompatibleRuntimes:
+        - python3.9
+
+  PreferenceTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "user_id"
+          AttributeType: "S"
+        - AttributeName: "district"
+          AttributeType: "S"
+        - AttributeName: "property_type"
+          AttributeType: "S"
+        - AttributeName: "min_price"
+          AttributeType: "N"
+        - AttributeName: "max_price"
+          AttributeType: "N"
+        - AttributeName: "bedrooms"
+          AttributeType: "N"
+        - AttributeName: "min_floor_size"
+          AttributeType: "N"
+        - AttributeName: "max_floor_size"
+          AttributeType: "N"
+        - AttributeName: "tenure"
+          AttributeType: "S"
+        - AttributeName: "min_build_year"
+          AttributeType: "N"
+        - AttributeName: "max_build_year"
+          AttributeType: "N"
+        - AttributeName: "floor_level"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "user_id"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: "Preferences"
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+          - http://localhost:5500
+          - http://127.0.0.1:5500
+        AllowMethods:
+          - "*"
+          - GET
+          - POST
+          - PUT
+          - DELETE
