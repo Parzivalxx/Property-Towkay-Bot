@@ -1,5 +1,6 @@
 import json
 from dynamo import get_dynamo_table
+from src.read_preference.DecimalEncoder import DecimalEncoder
 
 
 def lambda_handler(event, context):
@@ -14,7 +15,7 @@ def lambda_handler(event, context):
         return {
             "statusCode": 200,
             "headers": {},
-            "body": json.dumps("Preference retrieved successfully"),
+            "body": json.dumps(user_details['Item'], cls=DecimalEncoder)
         }
 
     except Exception as e:

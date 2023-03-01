@@ -1,6 +1,6 @@
 import json
 from dynamo import get_dynamo_table
-from typing import Dict
+from typing import Dict, Union
 
 
 def lambda_handler(event, context):
@@ -11,14 +11,14 @@ def lambda_handler(event, context):
                 "headers": {},
                 "body": "Bad request"}
 
-    preference: Dict[str, int | str] = json.loads(event["body"])
+    preference: Dict[str, Union[int, str]] = json.loads(event["body"])
 
     try:
         db_response = get_dynamo_table().put_item(Item=preference)
         print(db_response)
         return {"statusCode": 201,
                 "headers": {},
-                "body": json.dumps("Preference created successfully")}
+                "body": json.dumps(preference)}
 
     except Exception as e:
         print(e)

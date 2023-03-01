@@ -1,6 +1,6 @@
 import json
 from dynamo import get_dynamo_table
-from typing import Dict
+from typing import Dict, Union
 
 
 def lambda_handler(event, context):
@@ -11,7 +11,7 @@ def lambda_handler(event, context):
                 "headers": {},
                 "body": "Bad Request"}
 
-    preference: Dict[str, int | str] = json.loads(event["body"])
+    preference: Dict[str, Union[int, str]] = json.loads(event["body"])
 
     search_params = {
         "user_id": event['pathParameters']['user_id']
@@ -54,7 +54,7 @@ def lambda_handler(event, context):
         return {
             "statusCode": 200,
             "headers": {},
-            "body": json.dumps("Preference updated successfully"),
+            "body": json.dumps(db_response['Attributes']),
         }
 
     except Exception as e:

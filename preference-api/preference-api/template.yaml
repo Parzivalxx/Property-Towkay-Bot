@@ -34,7 +34,7 @@ Resources:
   CreatePreferenceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/create-preference/
+      CodeUri: src/create_preference/
       Handler: app.lambda_handler
       Layers:
         - !Ref MyLayers
@@ -52,7 +52,7 @@ Resources:
   DeletePreferenceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/delete-preference/
+      CodeUri: src/delete_preference/
       Handler: app.lambda_handler
       Layers:
         - !Ref MyLayers
@@ -70,7 +70,7 @@ Resources:
   ReadPreferenceFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/read-preference/
+      CodeUri: src/read_preference/
       Handler: app.lambda_handler
       Layers:
         - !Ref MyLayers
@@ -88,7 +88,7 @@ Resources:
   UpdateActionFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/update-preference/
+      CodeUri: src/update_preference/
       Handler: app.lambda_handler
       Layers:
         - !Ref MyLayers

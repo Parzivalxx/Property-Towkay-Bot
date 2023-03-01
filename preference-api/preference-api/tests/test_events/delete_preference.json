@@ -1,0 +1,42 @@
+{
+    "version": "2.0",
+    "routeKey": "DELETE /preferences/{user_id}",
+    "rawPath": "/preferences/lol3",
+    "rawQueryString": "",
+    "cookies": [],
+    "headers": {
+        "Host": "localhost:3000",
+        "X-Amz-Date": "20230301T092034Z",
+        "User-Agent": "PostmanRuntime/7.29.0",
+        "Accept": "*/*",
+        "Postman-Token": "f6fbcbe3-4151-4012-baef-df54f8eec641",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "X-Forwarded-Proto": "http",
+        "X-Forwarded-Port": "3000"
+    },
+    "requestContext": {
+        "accountId": "123456789012",
+        "apiId": "1234567890",
+        "http": {
+            "method": "DELETE",
+            "path": "/preferences/lol3",
+            "protocol": "HTTP/1.1",
+            "sourceIp": "127.0.0.1",
+            "userAgent": "Custom User Agent String"
+        },
+        "requestId": "f1c94185-d51c-4842-a3c2-409a80e45a84",
+        "routeKey": "DELETE /preferences/{user_id}",
+        "stage": "$default",
+        "time": "01/Mar/2023:08:18:06 +0000",
+        "timeEpoch": 1677658686,
+        "domainName": "localhost",
+        "domainPrefix": "localhost"
+    },
+    "body": "",
+    "pathParameters": {
+        "user_id": "lol3"
+    },
+    "stageVariables": null,
+    "isBase64Encoded": false
+}

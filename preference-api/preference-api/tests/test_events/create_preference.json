@@ -1,0 +1,43 @@
+{
+    "version": "2.0",
+    "routeKey": "POST /preferences",
+    "rawPath": "/preferences",
+    "rawQueryString": "",
+    "cookies": [],
+    "headers": {
+        "X-Amz-Content-Sha256": "cfe7d751531178000997026241d3cb0450d0f0290f94869291d94d5abc6a41d",
+        "Host": "localhost:3000",
+        "X-Amz-Date": "20230301T082005Z",
+        "Content-Type": "application/json",
+        "User-Agent": "PostmanRuntime/7.29.0",
+        "Accept": "*/*",
+        "Postman-Token": "7528a781-9c3f-43cd-9a93-da8ea11a6dd5",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Content-Length": "298",
+        "X-Forwarded-Proto": "http",
+        "X-Forwarded-Port": "3000"
+    },
+    "requestContext": {
+        "accountId": "123456789012",
+        "apiId": "1234567890",
+        "http": {
+            "method": "POST",
+            "path": "/preferences",
+            "protocol": "HTTP/1.1",
+            "sourceIp": "127.0.0.1",
+            "userAgent": "Custom User Agent String"
+        },
+        "requestId": "f1c94185-d51c-4842-a3c2-409a80e45a84",
+        "routeKey": "POST /preference",
+        "stage": "$default",
+        "time": "01/Mar/2023:08:18:06 +0000",
+        "timeEpoch": 1677658686,
+        "domainName": "localhost",
+        "domainPrefix": "localhost"
+    },
+    "body": "{\n    \"user_id\": \"lol3\",\n    \"district\": \"nice\",\n    \"property_type\": \"good\",\n    \"min_price\": 1,\n    \"max_price\": 2,\n    \"bedrooms\": 3,\n    \"min_floor_size\": 4,\n    \"max_floor_size\": 5,\n    \"tenure\": \"999\",\n    \"min_build_year\": 6,\n    \"max_build_year\": 7,\n    \"floor_level\": \"high\"\n}",
+    "pathParameters": {},
+    "stageVariables": null,
+    "isBase64Encoded": false
+}
