@@ -251,13 +251,15 @@ async def schedule_scraper(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text='Error with previous preference, please create new preference'
         )
         return
-    text = f'Scraping scheduled for every {frequency} hour(s)\n' + \
+    await context.job_queue.stop(wait=False)
+    await context.job_queue.start()
+    text = 'Cleared job queue...\n' + \
+        f'Scraping scheduled for every {frequency} hour(s)\n' + \
         'Type /stop_scraper to stop the scraping process at any time'
     await context.bot.send_message(
         chat_id=update.message.chat_id,
         text=text
     )
-    await context.job_queue.start()
     context.job_queue.run_repeating(
         callback=invoke_scraper,
         interval=TIME_INTERVAL*frequency,
