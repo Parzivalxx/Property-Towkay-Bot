@@ -4,6 +4,7 @@ import botocore
 import json
 import requests
 import os
+import time
 from typing import Dict
 from credentials import (
     LAMBDA_FUNCTION,
@@ -51,6 +52,7 @@ new_preference = None
 previous_updated_key = None
 GET_NEW_PREFERENCE, GET_NUMERIC_INPUT = range(2)
 UPDATE_CURRENT_PREFERENCE, CHOOSE_OPTION_TO_UPDATE, UPDATE_NUMERIC_SELECTION = range(2, 5)
+DELETE_PREFERENCE = 5
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -136,18 +138,44 @@ async def read_preference(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def delete_preference(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    r = requests.delete(f'{API_URI}/{update.message.from_user.id}')
+    preference = await read_preference(update, context)
+    if not preference:
+        return
+    buttons = [
+        [
+            InlineKeyboardButton('Yes', callback_data='Yes'),
+            InlineKeyboardButton('No', callback_data='No')
+        ]
+    ]
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text='Are you sure you want to delete these preferences?',
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
+    return DELETE_PREFERENCE
+
+
+async def delete_preference_actual(update: Update, context: CallbackContext):
+    query = update.callback_query.data
+    await update.callback_query.answer()
+    if query == 'No':
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text='Ending current operation...'
+        )
+        return ConversationHandler.END
+    r = requests.delete(f'{API_URI}/{update.callback_query.from_user.id}')
     if r.status_code == 400:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text='Deletion failed, please create a preference first'
+            text='Deletion failed...'
         )
     else:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text='Deletion successful...'
         )
-
+    return ConversationHandler.END
 
 async def get_new_preference(update: Update, context: CallbackContext):
     global preference_key_count, new_preference
@@ -237,12 +265,8 @@ async def get_new_preference(update: Update, context: CallbackContext):
 
 async def schedule_scraper(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # get frequency from db
-    preference = await get_existing_preference(update, context)
+    preference = await read_preference(update, context)
     if not preference:
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text='No preference created, please create one first'
-        )
         return
     frequency = int(preference.get('job_frequency_hours', -1))
     if frequency == -1:
@@ -252,9 +276,10 @@ async def schedule_scraper(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
     await context.job_queue.stop(wait=False)
+    time.sleep(1)
     await context.job_queue.start()
-    text = 'Cleared job queue...\n' + \
-        f'Scraping scheduled for every {frequency} hour(s)\n' + \
+    text = 'Cleared job queue...\n\n' + \
+        f'Scraping scheduled for every {frequency} hour(s) for the above preferences\n' + \
         'Type /stop_scraper to stop the scraping process at any time'
     await context.bot.send_message(
         chat_id=update.message.chat_id,
@@ -492,9 +517,18 @@ if __name__ == '__main__':
     help_handler = CommandHandler('help', help)
     scraper_handler = CommandHandler('schedule_scraper', schedule_scraper)
     stop_scraper_handler = CommandHandler('stop_scraper', stop_scraper)
-    delete_handler = CommandHandler('delete', delete_preference)
     read_handler = CommandHandler('read', read_preference)
     unknown_handler = MessageHandler(filters.COMMAND, unknown)
+    delete_handler = ConversationHandler(
+        entry_points=[CommandHandler('delete', delete_preference)],
+        states={
+            DELETE_PREFERENCE: [
+                CommandHandler('cancel', cancel),
+                CallbackQueryHandler(callback=delete_preference_actual)
+            ]
+        },
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
     create_handler = ConversationHandler(
         entry_points=[CommandHandler('create', create_preference)],
         states={
