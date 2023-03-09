@@ -23,7 +23,7 @@ class TestReadPreference(TestCase):
                 {"AttributeName": "user_id", "KeyType": "HASH"}
             ],
             AttributeDefinitions=[
-                {"AttributeName": "user_id", "AttributeType": "S"}
+                {"AttributeName": "user_id", "AttributeType": "N"}
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
         )
@@ -36,18 +36,21 @@ class TestReadPreference(TestCase):
         from src.read_preference import app
 
         mock_item = {
-            "user_id": {"S": "lol3"},
-            "district": {"S": "nice"},
-            "property_type": {"S": "good"},
-            "min_price": {"N": "1"},
-            "max_price": {"N": "2"},
-            "bedrooms": {"N": "3"},
-            "min_floor_size": {"N": "4"},
-            "max_floor_size": {"N": "5"},
-            "tenure": {"S": "999"},
-            "min_build_year": {"N": "6"},
-            "max_build_year": {"N": "7"},
-            "floor_level": {"S": "high"}
+            "user_id": {"N": "1"},
+            "listing_type": {"S": "Sale"},
+            "property_type": {"S": "HDB"},
+            "property_type_code": {"S": "5 room"},
+            "min_price": {"N": "700000"},
+            "max_price": {"N": "800000"},
+            "min_floor_size": {"N": "1000"},
+            "max_floor_size": {"N": "1400"},
+            "min_build_year": {"N": "1980"},
+            "max_build_year": {"N": "2010"},
+            "bedrooms": {"S": "3"},
+            "floor_level": {"S": "High"},
+            "tenure": {"S": "99-year"},
+            "district": {"S": "D19"},
+            "job_frequency_hours": {"N": "3"}
         }
 
         self.dynamodb.put_item(TableName='Mock_Preferences', Item=mock_item)
@@ -66,18 +69,21 @@ class TestReadPreference(TestCase):
         from src.read_preference import app
 
         mock_item = {
-            "user_id": {"S": "zzz"},
-            "district": {"S": "nice"},
-            "property_type": {"S": "good"},
-            "min_price": {"N": "1"},
-            "max_price": {"N": "2"},
-            "bedrooms": {"N": "3"},
-            "min_floor_size": {"N": "4"},
-            "max_floor_size": {"N": "5"},
-            "tenure": {"S": "999"},
-            "min_build_year": {"N": "6"},
-            "max_build_year": {"N": "7"},
-            "floor_level": {"S": "high"}
+            "user_id": {"N": "2"},
+            "listing_type": {"S": "Sale"},
+            "property_type": {"S": "HDB"},
+            "property_type_code": {"S": "5 room"},
+            "min_price": {"N": "700000"},
+            "max_price": {"N": "800000"},
+            "min_floor_size": {"N": "1000"},
+            "max_floor_size": {"N": "1400"},
+            "min_build_year": {"N": "1980"},
+            "max_build_year": {"N": "2010"},
+            "bedrooms": {"S": "3"},
+            "floor_level": {"S": "High"},
+            "tenure": {"S": "99-year"},
+            "district": {"S": "D19"},
+            "job_frequency_hours": {"N": "3"}
         }
 
         self.dynamodb.put_item(TableName='Mock_Preferences', Item=mock_item)

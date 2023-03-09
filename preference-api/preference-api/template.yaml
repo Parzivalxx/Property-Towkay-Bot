@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   preference-api
@@ -28,7 +28,7 @@ Parameters:
     Default: ap-southeast-1
   AWSenv:
     Type: String
-    Default: AWS_SAM_LOCAL
+    Default: AWS
 
 Resources:
   CreatePreferenceFunction:
@@ -45,9 +45,9 @@ Resources:
             Path: /preferences
             Method: post
             ApiId: !Ref HttpApi
-          Policies:
-            - DynamoDBCrudPolicy:
-              TableName: !Ref PreferenceTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PreferenceTable
 
   DeletePreferenceFunction:
     Type: AWS::Serverless::Function
@@ -63,9 +63,9 @@ Resources:
             Path: /preferences/{user_id}
             Method: delete
             ApiId: !Ref HttpApi
-          Policies:
-            - DynamoDBCrudPolicy:
-              TableName: !Ref PreferenceTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PreferenceTable
 
   ReadPreferenceFunction:
     Type: AWS::Serverless::Function
@@ -115,29 +115,7 @@ Resources:
     Properties:
       AttributeDefinitions:
         - AttributeName: "user_id"
-          AttributeType: "S"
-        - AttributeName: "district"
-          AttributeType: "S"
-        - AttributeName: "property_type"
-          AttributeType: "S"
-        - AttributeName: "min_price"
           AttributeType: "N"
-        - AttributeName: "max_price"
-          AttributeType: "N"
-        - AttributeName: "bedrooms"
-          AttributeType: "N"
-        - AttributeName: "min_floor_size"
-          AttributeType: "N"
-        - AttributeName: "max_floor_size"
-          AttributeType: "N"
-        - AttributeName: "tenure"
-          AttributeType: "S"
-        - AttributeName: "min_build_year"
-          AttributeType: "N"
-        - AttributeName: "max_build_year"
-          AttributeType: "N"
-        - AttributeName: "floor_level"
-          AttributeType: "S"
       KeySchema:
         - AttributeName: "user_id"
           KeyType: "HASH"

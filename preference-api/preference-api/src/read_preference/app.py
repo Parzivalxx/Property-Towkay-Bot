@@ -1,14 +1,13 @@
 import json
+from decimal import Decimal
 from dynamo import get_dynamo_table
-from src.read_preference.DecimalEncoder import DecimalEncoder
 
 
 def lambda_handler(event, context):
     print(event)
 
-    user_id = event['pathParameters']['user_id']
-
     try:
+        user_id = int(event['pathParameters']['user_id'])
         user_details = get_dynamo_table().get_item(Key={"user_id": user_id})
         print(user_details)
 
@@ -25,3 +24,10 @@ def lambda_handler(event, context):
             "headers": {},
             "body": "Not Found",
         }
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)

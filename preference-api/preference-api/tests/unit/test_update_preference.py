@@ -23,7 +23,7 @@ class TestUpdatePreference(TestCase):
                 {"AttributeName": "user_id", "KeyType": "HASH"}
             ],
             AttributeDefinitions=[
-                {"AttributeName": "user_id", "AttributeType": "S"}
+                {"AttributeName": "user_id", "AttributeType": "N"}
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1}
         )
@@ -35,18 +35,21 @@ class TestUpdatePreference(TestCase):
     def test_update_preference_success(self):
         from src.update_preference import app
         mock_item = {
-            "user_id": {"S": "mock"},
-            "district": {"S": "mock1"},
-            "property_type": {"S": "mock2"},
-            "min_price": {"N": "10"},
-            "max_price": {"N": "11"},
-            "bedrooms": {"N": "12"},
-            "min_floor_size": {"N": "13"},
-            "max_floor_size": {"N": "14"},
-            "tenure": {"S": "freehold"},
-            "min_build_year": {"N": "15"},
-            "max_build_year": {"N": "16"},
-            "floor_level": {"S": "low"}
+            "user_id": {"N": "1"},
+            "listing_type": {"S": "Sale"},
+            "property_type": {"S": "HDB"},
+            "property_type_code": {"S": "5 room"},
+            "min_price": {"N": "700000"},
+            "max_price": {"N": "800000"},
+            "min_floor_size": {"N": "1000"},
+            "max_floor_size": {"N": "1400"},
+            "min_build_year": {"N": "1980"},
+            "max_build_year": {"N": "2010"},
+            "bedrooms": {"S": "3"},
+            "floor_level": {"S": "High"},
+            "tenure": {"S": "99-year"},
+            "district": {"S": "D19"},
+            "job_frequency_hours": {"N": "3"}
         }
         self.dynamodb.put_item(TableName='Mock_Preferences', Item=mock_item)
 
@@ -58,35 +61,41 @@ class TestUpdatePreference(TestCase):
         body = json.loads(response['body'])
 
         self.assertEqual(response['statusCode'], 200)
-        self.assertEqual(body['user_id'], 'mock')
-        self.assertEqual(body['district'], 'nice')
-        self.assertEqual(body['property_type'], 'good')
-        self.assertEqual(body['min_price'], '1')
-        self.assertEqual(body['max_price'], '2')
-        self.assertEqual(body['bedrooms'], '3')
-        self.assertEqual(body['min_floor_size'], '4')
-        self.assertEqual(body['max_floor_size'], '5')
-        self.assertEqual(body['tenure'], '999')
-        self.assertEqual(body['min_build_year'], '6')
-        self.assertEqual(body['max_build_year'], '7')
-        self.assertEqual(body['floor_level'], 'high')
+        self.assertEqual(body['user_id'], '1')
+        self.assertEqual(body['listing_type'], 'Rent')
+        self.assertEqual(body['property_type'], 'Condo')
+        self.assertEqual(body['property_type_code'], '5 room')
+        self.assertEqual(body['min_price'], '700000')
+        self.assertEqual(body['max_price'], '800000')
+        self.assertEqual(body['min_floor_size'], '1000')
+        self.assertEqual(body['max_floor_size'], '1400')
+        self.assertEqual(body['min_build_year'], '2000')
+        self.assertEqual(body['max_build_year'], '2010')
+        self.assertEqual(body['bedrooms'], '4')
+        self.assertEqual(body['floor_level'], 'High')
+        self.assertEqual(body['tenure'], '99-year')
+        self.assertEqual(body['district'], 'D20')
+        self.assertEqual(body['job_frequency_hours'], '1')
 
     def test_update_preference_failure(self):
         from src.update_preference import app
 
         mock_item = {
-            "user_id": {"S": "fake"},
-            "district": {"S": "mock1"},
-            "property_type": {"S": "mock2"},
-            "min_price": {"N": "10"},
-            "max_price": {"N": "11"},
-            "bedrooms": {"N": "12"},
-            "min_floor_size": {"N": "13"},
-            "max_floor_size": {"N": "14"},
-            "tenure": {"S": "freehold"},
-            "min_build_year": {"N": "15"},
-            "max_build_year": {"N": "16"},
-            "floor_level": {"S": "low"}
+            "user_id": {"N": "2"},
+            "listing_type": {"S": "Sale"},
+            "property_type": {"S": "HDB"},
+            "property_type_code": {"S": "5 room"},
+            "min_price": {"N": "700000"},
+            "max_price": {"N": "800000"},
+            "min_floor_size": {"N": "1000"},
+            "max_floor_size": {"N": "1400"},
+            "min_build_year": {"N": "1980"},
+            "max_build_year": {"N": "2010"},
+            "bedrooms": {"S": "3"},
+            "floor_level": {"S": "High"},
+            "tenure": {"S": "99-year"},
+            "district": {"S": "D19"},
+            "job_frequency_hours": {"N": "3"}
         }
         self.dynamodb.put_item(TableName='Mock_Preferences', Item=mock_item)
 

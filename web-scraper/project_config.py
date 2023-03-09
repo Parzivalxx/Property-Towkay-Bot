@@ -86,3 +86,13 @@ query_mapper = {
     'tenure': 'tenure[]',
     'district': 'district_code[]'
 }
+
+numeric_cols = (
+    'min_price',
+    'max_price',
+    'min_floor_size',
+    'max_floor_size',
+    'min_build_year',
+    'max_build_year',
+    'job_frequency_hours'
+)

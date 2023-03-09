@@ -3,7 +3,8 @@ import os
 from project_config import (
     URI,
     preference_mapper,
-    query_mapper
+    query_mapper,
+    numeric_cols
 )
 from WebScraper import WebScraper
 from typing import Dict
@@ -59,7 +60,7 @@ def create_url(url: str, event: Dict) -> str:
             else:
                 url += f'&{mapped_key}={value}'
             continue
-        if isinstance(value, int):
+        if key in numeric_cols:
             url += f'&{mapped_key}={value}'
         else:
             if key not in preference_mapper:

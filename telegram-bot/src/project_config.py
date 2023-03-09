@@ -1,13 +1,29 @@
-LAMBDA_FUNCTION = 'property-towkay-webscraper-lambda'
-
 handlers = {
     '/help': 'view list of commands to run',
-    '/new': 'input new preference',
+    '/create': 'create new preference',
+    '/read': 'view existing preference',
     '/update': 'update existing preference',
     '/delete': 'delete existing preference',
-    '/pause': 'pause current job',
-    '/continue': 'continue current job'
+    '/stop_scraper': 'stop scraping job',
+    '/schedule_scraper': 'start scraping job'
 }
+
+display_order = (
+    'listing_type',
+    'property_type',
+    'property_type_code',
+    'min_price',
+    'max_price',
+    'min_floor_size',
+    'max_floor_size',
+    'min_build_year',
+    'max_build_year',
+    'bedrooms',
+    'floor_level',
+    'tenure',
+    'district',
+    'job_frequency_hours'
+)
 
 preference_data = {
     'user_id': '',
@@ -140,6 +156,7 @@ preference_options = {
 }
 
 numeric_cols = (
+    'user_id',
     'min_price',
     'max_price',
     'min_floor_size',

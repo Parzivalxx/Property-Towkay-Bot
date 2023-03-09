@@ -23,7 +23,7 @@ class TestCreatePreference(TestCase):
                 {"AttributeName": "user_id", "KeyType": "HASH"}
             ],
             AttributeDefinitions=[
-                {"AttributeName": "user_id", "AttributeType": "S"}
+                {"AttributeName": "user_id", "AttributeType": "N"}
             ],
             ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
         )
@@ -43,18 +43,21 @@ class TestCreatePreference(TestCase):
         body = json.loads(response['body'])
 
         self.assertEqual(response['statusCode'], 201)
-        self.assertEqual(body['user_id'], 'lol3')
-        self.assertEqual(body['district'], 'nice')
-        self.assertEqual(body['property_type'], 'good')
-        self.assertEqual(body['min_price'], 1)
-        self.assertEqual(body['max_price'], 2)
-        self.assertEqual(body['bedrooms'], 3)
-        self.assertEqual(body['min_floor_size'], 4)
-        self.assertEqual(body['max_floor_size'], 5)
-        self.assertEqual(body['tenure'], '999')
-        self.assertEqual(body['min_build_year'], 6)
-        self.assertEqual(body['max_build_year'], 7)
-        self.assertEqual(body['floor_level'], 'high')
+        self.assertEqual(body['user_id'], 1)
+        self.assertEqual(body['listing_type'], 'Sale')
+        self.assertEqual(body['property_type'], 'HDB')
+        self.assertEqual(body['property_type_code'], '5 room')
+        self.assertEqual(body['min_price'], 700000)
+        self.assertEqual(body['max_price'], 800000)
+        self.assertEqual(body['min_floor_size'], 1000)
+        self.assertEqual(body['max_floor_size'], 1400)
+        self.assertEqual(body['min_build_year'], 1980)
+        self.assertEqual(body['max_build_year'], 2010)
+        self.assertEqual(body['bedrooms'], '3')
+        self.assertEqual(body['floor_level'], 'High')
+        self.assertEqual(body['tenure'], '99-year')
+        self.assertEqual(body['district'], 'D19')
+        self.assertEqual(body['job_frequency_hours'], 3)
 
     def test_create_preference_failure(self):
         from src.create_preference import app

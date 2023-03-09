@@ -2,7 +2,6 @@ import json
 from dynamo import get_dynamo_table
 from typing import Dict, Union
 from decimal import Decimal
-from src.update_preference.DecimalEncoder import DecimalEncoder
 
 
 def lambda_handler(event, context):
@@ -13,40 +12,44 @@ def lambda_handler(event, context):
                 "headers": {},
                 "body": "Bad Request"}
 
-    preference: Dict[str, Union[int, str]] = json.loads(event["body"])
-
-    search_params = {
-        "user_id": event['pathParameters']['user_id']
-    }
-
     try:
+        preference: Dict[str, Union[int, str]] = json.loads(event["body"])
+        search_params = {
+            "user_id": int(event['pathParameters']['user_id'])
+        }
         db_response = get_dynamo_table().update_item(
             Key=search_params,
             UpdateExpression=(
-                "set district=:d, "
-                "property_type=:p, "
+                "set listing_type=:l, "
+                "property_type=:pt, "
+                "property_type_code=:ptc, "
                 "min_price=:minp, "
                 "max_price=:maxp, "
-                "bedrooms=:b, "
                 "min_floor_size=:minf, "
                 "max_floor_size=:maxf, "
-                "tenure=:t, "
                 "min_build_year=:minb, "
                 "max_build_year=:maxb, "
-                "floor_level=:f"
+                "bedrooms=:b, "
+                "floor_level=:f, "
+                "tenure=:t, "
+                "district=:d, "
+                "job_frequency_hours=:j"
             ),
             ExpressionAttributeValues={
-                ":d": preference['district'],
-                ":p": preference['property_type'],
+                ":l": preference['listing_type'],
+                ":pt": preference['property_type'],
+                ":ptc": preference['property_type_code'],
                 ":minp": Decimal(str(preference['min_price'])),
                 ":maxp": Decimal(str(preference['max_price'])),
-                ":b": Decimal(str(preference['bedrooms'])),
                 ":minf": Decimal(str(preference['min_floor_size'])),
                 ":maxf": Decimal(str(preference['max_floor_size'])),
-                ":t": preference['tenure'],
                 ":minb": Decimal(str(preference['min_build_year'])),
                 ":maxb": Decimal(str(preference['max_build_year'])),
-                ":f": preference['floor_level']
+                ":b": preference['bedrooms'],
+                ":f": preference['floor_level'],
+                ":t": preference['tenure'],
+                ":d": preference['district'],
+                ":j": preference['job_frequency_hours'],
             },
             ConditionExpression="attribute_exists(user_id)",
             ReturnValues="ALL_NEW"
@@ -64,3 +67,10 @@ def lambda_handler(event, context):
         return {"statusCode": 400,
                 "headers": {},
                 "body": "Bad Request"}
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)

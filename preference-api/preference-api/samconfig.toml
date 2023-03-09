@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "preference-api"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-ol88dp6qux7m"
+s3_prefix = "preference-api"
+region = "ap-southeast-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Table=\"Preferences\" Region=\"ap-southeast-1\" AWSenv=\"AWS\""
+image_repositories = []
