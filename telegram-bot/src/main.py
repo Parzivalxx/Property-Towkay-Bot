@@ -35,7 +35,8 @@ from project_config import (
     preference_options,
     preference_data,
     numeric_cols,
-    display_order
+    display_order,
+    TIME_INTERVAL
 )
 
 
@@ -258,7 +259,7 @@ async def schedule_scraper(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.job_queue.start()
     context.job_queue.run_repeating(
         callback=invoke_scraper,
-        interval=3600*frequency,
+        interval=TIME_INTERVAL*frequency,
         data=json.dumps(preference),
         chat_id=update.effective_message.chat_id,
         first=0

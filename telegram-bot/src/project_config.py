@@ -1,3 +1,5 @@
+TIME_INTERVAL = 3600
+
 handlers = {
     '/help': 'view list of commands to run',
     '/create': 'create new preference',
