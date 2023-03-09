@@ -6,16 +6,14 @@ import requests
 import os
 from typing import Dict
 from credentials import (
-    BOT_TOKEN,
     LAMBDA_FUNCTION,
     API_URI,
     AWS_ACCESS_KEY,
-    AWS_SECRET_KEY
+    AWS_SECRET_KEY,
+    HEROKU_URL
 )
-
 from telegram import (
     Update,
-    ReplyKeyboardMarkup,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     ForceReply
@@ -39,6 +37,9 @@ from project_config import (
     TIME_INTERVAL
 )
 
+
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+PORT = int(os.environ.get('PORT', 80))
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -540,4 +541,9 @@ if __name__ == '__main__':
     application.add_handler(update_handler)
     application.add_handler(unknown_handler)
 
-    application.run_polling()
+    application.run_webhook(
+        listen='0.0.0.0',
+        port=PORT,
+        url_path=BOT_TOKEN,
+        webhook_url=HEROKU_URL+BOT_TOKEN
+    )
