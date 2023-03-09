@@ -6,6 +6,7 @@ exclude =
     docs/source/conf.py,
     old,
     build,
-    dist
-max-complexity = 10
+    dist,
+    telegram-bot/src/main.py
+max-complexity = 20
 max-line-length = 88

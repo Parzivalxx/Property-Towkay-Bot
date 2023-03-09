@@ -1,3 +1,5 @@
+LAMBDA_FUNCTION = 'property-towkay-webscraper-lambda'
+
 handlers = {
     '/help': 'view list of commands to run',
     '/new': 'input new preference',
@@ -11,7 +13,7 @@ preference_data = {
     'user_id': '',
     'listing_type': '',
     'property_type': '',
-    'property_code': '',
+    'property_type_code': '',
     'min_price': 0,
     'max_price': 0,
     'min_floor_size': 0,
@@ -21,7 +23,8 @@ preference_data = {
     'bedrooms': 0,
     'floor_level': '',
     'tenure': '',
-    'district': ''
+    'district': '',
+    'job_frequency_hours': 0
 }
 
 preference_options = {
@@ -34,7 +37,7 @@ preference_options = {
         'Condo',
         'Landed'
     ),
-    'property_code': {
+    'property_type_code': {
         'HDB': (
             '1 room',
             '2 room',
@@ -127,5 +130,21 @@ preference_options = {
         'D26 Mandai / Upper Thomson',
         'D27 Sembawang / Yishun',
         'D28 Seletar / Yio Chu Kang'
-    )
+    ),
+    'job_frequency_hours': (
+        '1',
+        '3',
+        '6',
+        '12'
+    ),
 }
+
+numeric_cols = (
+    'min_price',
+    'max_price',
+    'min_floor_size',
+    'max_floor_size',
+    'min_build_year',
+    'max_build_year',
+    'job_frequency_hours'
+)
