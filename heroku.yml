@@ -1,0 +1,13 @@
+build:
+  docker:
+    web: telegram-bot/src/Dockerfile
+  config:
+    heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+    api_uri: ${{ secrets.API_URI }}
+    mode: ${{ secrets.MODE }}
+    lambda_function: ${{ secrets.LAMBDA_FUNCTION }}
+    aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+    aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+    bot_token: ${{ secrets.BOT_TOKEN }}
+run:
+  web: python3 main.py $PORT
