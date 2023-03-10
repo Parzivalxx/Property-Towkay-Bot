@@ -7,12 +7,6 @@ import os
 import sys
 import time
 from typing import Dict
-from credentials import (
-    LAMBDA_FUNCTION,
-    API_URI,
-    AWS_ACCESS_KEY,
-    AWS_SECRET_KEY
-)
 from telegram import (
     Update,
     InlineKeyboardButton,
@@ -38,7 +32,10 @@ from project_config import (
     TIME_INTERVAL
 )
 
-
+LAMBDA_FUNCTION = os.environ.get('LAMBDA_FUNCTION')
+API_URI = os.environ.get('API_URI')
+AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 mode = os.environ.get('MODE')
 

@@ -43,6 +43,13 @@ jobs:
       - name: Build and push
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          API_URI: ${{ secrets.API_URI }}
+          MODE: ${{ secrets.MODE }}
+          LAMBDA_FUNCTION: ${{ secrets.LAMBDA_FUNCTION }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           cd telegram-bot/src
           heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web

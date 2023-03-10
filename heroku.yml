@@ -1,5 +1,0 @@
-build:
-  docker:
-    web: telegram-bot/src/Dockerfile
-run:
-  web: python3 main.py $PORT
