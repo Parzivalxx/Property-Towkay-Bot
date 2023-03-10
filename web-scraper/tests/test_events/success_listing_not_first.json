@@ -1,0 +1,17 @@
+{
+    "user_id": 1,
+    "property_type": "HDB",
+    "property_type_code": "5 room",
+    "min_price": 600000,
+    "max_price": 800000,
+    "min_floor_size": 1200,
+    "max_floor_size": 1400,
+    "min_build_year": 1980,
+    "max_build_year": 2010,
+    "bedrooms": "3",
+    "floor_level": "High",
+    "tenure": "99-year",
+    "district": "D19",
+    "listing_type": "Sale",
+    "job_frequency_hours": 1
+}

@@ -1,0 +1,1 @@
+https://www.propertyguru.com.sg/property-for-sale?market=residential&listing_type=sale&property_type=H&property_type_code[]=5A&property_type_code[]=5I&property_type_code[]=5S&minprice=600000&maxprice=800000&minsize=1200&maxsize=1400&mintop=1980&maxtop=2010&beds[]=3&floor_level[]=HIGH&tenure[]=L99&district_code[]=D19&search=true

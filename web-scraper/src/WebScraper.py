@@ -2,7 +2,7 @@ import time
 from scrapingant_client import ScrapingAntClient
 from typing import List, Tuple
 from bs4 import BeautifulSoup
-from project_config import (
+from src.project_config import (
     MAX_PAGES,
     SCRAPER_INIT_RETRIES,
     SCRAPER_ERROR_RETRIES
