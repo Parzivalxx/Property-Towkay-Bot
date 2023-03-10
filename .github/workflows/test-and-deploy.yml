@@ -36,7 +36,7 @@ jobs:
           cd preference-api/preference-api/
           python -m unittest discover tests/unit/ -bv
           cd ../..
-      - name: Deploy to Heroku
+      - name: Login to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
