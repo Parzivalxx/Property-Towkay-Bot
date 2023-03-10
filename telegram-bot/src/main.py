@@ -356,7 +356,7 @@ async def invoke_scraper(context: CallbackContext):
     )
     response = json.loads(invoke_response['Payload'].read())
     if response['statusCode'] == 500:
-        text = json.loads(response['body'])
+        text = 'An error occurred when running scraper...'
     else:
         links = json.loads(response['body'])
         if not links:
