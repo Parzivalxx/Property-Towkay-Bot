@@ -4,14 +4,14 @@ import botocore
 import json
 import requests
 import os
+import sys
 import time
 from typing import Dict
 from credentials import (
     LAMBDA_FUNCTION,
     API_URI,
     AWS_ACCESS_KEY,
-    AWS_SECRET_KEY,
-    HEROKU_URL
+    AWS_SECRET_KEY
 )
 from telegram import (
     Update,
@@ -40,12 +40,31 @@ from project_config import (
 
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
-PORT = int(os.environ.get('PORT', 80))
+mode = os.environ.get('MODE')
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
+
+if mode == 'dev':
+    def run(application):
+        application.run_polling()
+
+elif mode == 'prod':
+    def run(application):
+        PORT = int(os.environ.get('PORT', 80))
+        HEROKU_APP_NAME = os.environ.get('HEROKU_APP_NAME')
+        application.run_webhook(
+            listen='0.0.0.0',
+            port=PORT,
+            url_path=BOT_TOKEN,
+            webhook_url=f'https://{HEROKU_APP_NAME}.herokuapp.com/{BOT_TOKEN}'
+        )
+
+else:
+    logging.error('No mode specified!')
+    sys.exit(1)
 
 preference_key_count = 0
 new_preference = None
@@ -577,9 +596,4 @@ if __name__ == '__main__':
     application.add_handler(update_handler)
     application.add_handler(unknown_handler)
 
-    application.run_webhook(
-        listen='0.0.0.0',
-        port=PORT,
-        url_path=BOT_TOKEN,
-        webhook_url=HEROKU_URL+BOT_TOKEN
-    )
+    run(application)
