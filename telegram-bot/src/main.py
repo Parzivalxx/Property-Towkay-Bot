@@ -5,7 +5,7 @@ import json
 import requests
 import os
 import sys
-import time
+from uuid import uuid4
 from typing import Dict
 from telegram import (
     Update,
@@ -62,6 +62,7 @@ elif mode == 'prod':
 else:
     logging.error('No mode specified!')
     sys.exit(1)
+
 
 preference_key_count = 0
 new_preference = None
@@ -291,30 +292,46 @@ async def schedule_scraper(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text='Error with previous preference, please create new preference'
         )
         return
-    await context.job_queue.stop(wait=False)
-    time.sleep(1)
-    await context.job_queue.start()
-    text = 'Cleared job queue...\n\n' + \
-        f'Scraping scheduled for every {frequency} hour(s) for the above preferences\n' + \
-        'Type /stop_scraper to stop the scraping process at any time'
-    await context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=text
-    )
+    chat_id = update.effective_message.chat_id
+    jobs_removed = remove_job_if_exists(str(chat_id), context)
     context.job_queue.run_repeating(
         callback=invoke_scraper,
         interval=TIME_INTERVAL*frequency,
         data=json.dumps(preference),
         chat_id=update.effective_message.chat_id,
-        first=0
+        first=0,
+        name=str(chat_id)
+    )
+    text = ''
+    if jobs_removed:
+        text += 'Cleared job queue...\n\n'
+    text += f'Scraping scheduled for every {frequency} hour(s) for the above preferences\n' + \
+        'Type /stop_scraper to stop the scraping process at any time'
+    await context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=text
     )
 
 
+def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
+    """Remove job with given name. Returns whether job was removed."""
+    current_jobs = context.job_queue.get_jobs_by_name(name)
+    if not current_jobs:
+        return False
+    for job in current_jobs:
+        job.schedule_removal()
+    return True
+
+
 async def stop_scraper(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.job_queue.stop(wait=False)
+    jobs_removed = remove_job_if_exists(str(update.effective_message.chat_id), context)
+    if jobs_removed:
+        text = 'Pending job removed successfully, scraping stopped...'
+    else:
+        text = 'No pending job to remove...'
     await context.bot.send_message(
         chat_id=update.message.chat_id,
-        text='Scraping stopped successfully'
+        text=text
     )
 
 
