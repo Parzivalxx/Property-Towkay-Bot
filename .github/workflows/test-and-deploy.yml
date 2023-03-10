@@ -36,7 +36,7 @@ jobs:
           cd preference-api/preference-api/
           python -m unittest discover tests/unit/ -bv
           cd ../..
-      - name: Login to Heroku Container registry
+      - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
@@ -44,7 +44,7 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          cd telegram/src
+          cd telegram-bot/src
           heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
       - name: Release
         env:
