@@ -1,4 +1,4 @@
-# CZ4052-Project
+# Property-Towkay-Bot
 
 Project for NTU CZ4052: Cloud Computing
 
